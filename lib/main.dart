@@ -20,9 +20,7 @@ import 'admin_login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const AttendanceApp());
 }
 
@@ -54,7 +52,7 @@ class AttendanceApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        cardTheme: const CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -82,17 +80,14 @@ class AttendanceApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('es', ''),
-        Locale('en', ''),
-      ],
+      supportedLocales: const [Locale('es', ''), Locale('en', '')],
       locale: const Locale('es', ''),
       home: const HomePage(),
     );
   }
 }
 
-  class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
@@ -144,7 +139,7 @@ class AttendanceApp extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildHeaderSection(BuildContext context) {
     return Column(
       children: [
@@ -216,28 +211,31 @@ class AttendanceApp extends StatelessWidget {
           subtitle: 'Registra tu entrada y salida',
           icon: Icons.person_rounded,
           color: Theme.of(context).colorScheme.primary,
-          onTap: () => Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => const AttendancePage())
-          ),
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AttendancePage()),
+              ),
           context: context,
         ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.2, end: 0),
         const SizedBox(height: 16),
         _buildOptionCard(
-          title: 'Acceso Admin',
-          subtitle: 'Panel de administración',
-          icon: Icons.admin_panel_settings_rounded,
-          color: Theme.of(context).colorScheme.secondary,
-          onTap: () => Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => const AdminLoginPage())
-          ),
-          context: context,
-        ).animate().fadeIn(duration: 500.ms).slideY(
-          begin: 0.2, 
-          end: 0, 
-          delay: 250.ms
-        ),
+              title: 'Acceso Admin',
+              subtitle: 'Panel de administración',
+              icon: Icons.admin_panel_settings_rounded,
+              color: Theme.of(context).colorScheme.secondary,
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AdminLoginPage(),
+                    ),
+                  ),
+              context: context,
+            )
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .slideY(begin: 0.2, end: 0, delay: 250.ms),
       ],
     );
   }
@@ -253,7 +251,9 @@ class AttendanceApp extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onBackground.withOpacity(0.6),
             ),
           ).animate().fadeIn(duration: 400.ms),
           const SizedBox(height: 8),
@@ -263,7 +263,9 @@ class AttendanceApp extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.4),
+              color: Theme.of(
+                context,
+              ).colorScheme.onBackground.withOpacity(0.4),
             ),
           ),
         ],
@@ -296,10 +298,7 @@ class AttendanceApp extends StatelessWidget {
                 offset: const Offset(0, 8),
               ),
             ],
-            border: Border.all(
-              color: color.withOpacity(0.1),
-              width: 1.5,
-            ),
+            border: Border.all(color: color.withOpacity(0.1), width: 1.5),
           ),
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -307,10 +306,7 @@ class AttendanceApp extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      color.withOpacity(0.3),
-                      color.withOpacity(0.1),
-                    ],
+                    colors: [color.withOpacity(0.3), color.withOpacity(0.1)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -324,11 +320,7 @@ class AttendanceApp extends StatelessWidget {
                   ],
                 ),
                 padding: const EdgeInsets.all(16),
-                child: Icon(
-                  icon,
-                  size: 32,
-                  color: color,
-                ),
+                child: Icon(icon, size: 32, color: color),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -348,7 +340,9 @@ class AttendanceApp extends StatelessWidget {
                       subtitle,
                       style: GoogleFonts.poppins(
                         fontSize: 15,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -374,25 +368,25 @@ class AttendancePage extends StatefulWidget {
   State<AttendancePage> createState() => _AttendancePageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> with TickerProviderStateMixin {
+class _AttendancePageState extends State<AttendancePage>
+    with TickerProviderStateMixin {
   bool _isLoading = false;
   File? _imageFile;
   bool _isAtValidLocation = false;
   bool _hasCheckedIn = false;
   String _lastAction = '';
   String _message = 'Verificando ubicación...';
-  
-  
-  final double _targetLatitude = -17.997823835873643; 
+
+  final double _targetLatitude = -17.997823835873643;
   final double _targetLongitude = -70.23955157259915;
-  final double _allowedDistance = 100; 
-  
+  final double _allowedDistance = 100;
+
   late AnimationController _pulseController;
   late AnimationController _checkInController;
 
   final TextEditingController _dniController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   @override
   void initState() {
     super.initState();
@@ -400,22 +394,21 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    
+
     _checkInController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
     );
-    
-    
+
     _dniController.addListener(() {
       if (_dniController.text.length >= 8) {
         _checkAttendanceStatus(_dniController.text);
       }
     });
-    
+
     _checkLocationPermission();
   }
-  
+
   @override
   void dispose() {
     _pulseController.dispose();
@@ -426,27 +419,26 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
 
   Future<void> _checkAttendanceStatus(String dni) async {
     if (dni.isEmpty) return;
-    
+
     try {
       String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      
-      QuerySnapshot attendanceSnapshot = await _firestore
-        .collection('attendance')
-        .where('dni', isEqualTo: dni)
-        .where('date', isEqualTo: today)
-        .get();
-      
+
+      QuerySnapshot attendanceSnapshot =
+          await _firestore
+              .collection('attendance')
+              .where('dni', isEqualTo: dni)
+              .where('date', isEqualTo: today)
+              .get();
+
       if (attendanceSnapshot.docs.isNotEmpty) {
-        Map<String, dynamic> data = attendanceSnapshot.docs.first.data() as Map<String, dynamic>;
-        
+        Map<String, dynamic> data =
+            attendanceSnapshot.docs.first.data() as Map<String, dynamic>;
+
         setState(() {
-          
           if (data['checkIn'] != null && data['checkOut'] == null) {
             _hasCheckedIn = true;
             _lastAction = 'Entrada registrada a las ${data['checkIn']['time']}';
-          } 
-          
-          else if (data['checkIn'] != null && data['checkOut'] != null) {
+          } else if (data['checkIn'] != null && data['checkOut'] != null) {
             _hasCheckedIn = true;
             _lastAction = 'Salida registrada a las ${data['checkOut']['time']}';
           }
@@ -456,15 +448,15 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       print('Error al verificar estado de asistencia: $e');
     }
   }
-  
+
   Future<void> _checkLocationPermission() async {
     setState(() {
       _isLoading = true;
     });
-    
+
     bool serviceEnabled;
     LocationPermission permission;
-    
+
     try {
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
@@ -474,7 +466,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
         });
         return;
       }
-      
+
       permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -486,15 +478,16 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
           return;
         }
       }
-      
+
       if (permission == LocationPermission.deniedForever) {
         setState(() {
           _isLoading = false;
-          _message = 'Los permisos de ubicación están permanentemente denegados';
+          _message =
+              'Los permisos de ubicación están permanentemente denegados';
         });
         return;
       }
-      
+
       _verifyLocation();
     } catch (e) {
       setState(() {
@@ -503,31 +496,32 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       });
     }
   }
-  
+
   Future<void> _verifyLocation() async {
     setState(() {
       _isLoading = true;
       _message = 'Verificando ubicación...';
     });
-    
+
     try {
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
+        desiredAccuracy: LocationAccuracy.high,
       );
-      
+
       double distance = Geolocator.distanceBetween(
         position.latitude,
         position.longitude,
         _targetLatitude,
-        _targetLongitude
+        _targetLongitude,
       );
-      
+
       setState(() {
         _isLoading = false;
         _isAtValidLocation = distance <= _allowedDistance;
-        _message = _isAtValidLocation 
-          ? 'Ubicación verificada ✓\nEstás dentro del perímetro permitido.'
-          : 'Fuera del perímetro permitido ✗\nDistancia: ${distance.toStringAsFixed(0)}m';
+        _message =
+            _isAtValidLocation
+                ? 'Ubicación verificada ✓\nEstás dentro del perímetro permitido.'
+                : 'Fuera del perímetro permitido ✗\nDistancia: ${distance.toStringAsFixed(0)}m';
       });
     } catch (e) {
       setState(() {
@@ -536,7 +530,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       });
     }
   }
-  
+
   Future<void> _takePicture() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -545,13 +539,12 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
         preferredCameraDevice: CameraDevice.front,
         imageQuality: 80,
       );
-      
+
       if (photo != null) {
         setState(() {
           _imageFile = File(photo.path);
         });
-        
-        
+
         _checkInController.reset();
         _checkInController.forward();
       }
@@ -567,12 +560,12 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
 
   Future<bool> _canMarkAttendance(String dni, bool isCheckIn) async {
     try {
-      
-      QuerySnapshot employeeSnapshot = await _firestore
-          .collection('employees')
-          .where('dni', isEqualTo: dni)
-          .get();
-      
+      QuerySnapshot employeeSnapshot =
+          await _firestore
+              .collection('employees')
+              .where('dni', isEqualTo: dni)
+              .get();
+
       if (employeeSnapshot.docs.isEmpty) {
         _showErrorDialog('DNI Inválido', 'El DNI no está registrado');
         return false;
@@ -580,21 +573,22 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
 
       // Check daily attendance
       String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      QuerySnapshot attendanceSnapshot = await _firestore
-          .collection('attendance')
-          .where('dni', isEqualTo: dni)
-          .where('date', isEqualTo: today)
-          .get();
+      QuerySnapshot attendanceSnapshot =
+          await _firestore
+              .collection('attendance')
+              .where('dni', isEqualTo: dni)
+              .where('date', isEqualTo: today)
+              .get();
 
       if (attendanceSnapshot.docs.isNotEmpty) {
         for (var doc in attendanceSnapshot.docs) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          
+
           if (isCheckIn && data['checkIn'] != null) {
             _showErrorDialog('Error', 'Ya has marcado tu entrada hoy');
             return false;
           }
-          
+
           if (!isCheckIn && data['checkOut'] != null) {
             _showErrorDialog('Error', 'Ya has marcado tu salida hoy');
             return false;
@@ -609,8 +603,6 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
     }
   }
 
-  
-  
   Future<void> _markAttendance(bool isCheckIn) async {
     if (!await _canMarkAttendance(_dniController.text, isCheckIn)) return;
 
@@ -619,38 +611,42 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       String now = DateFormat('HH:mm:ss').format(DateTime.now());
 
       // Find or create today's attendance record
-      QuerySnapshot existingRecords = await _firestore
-          .collection('attendance')
-          .where('dni', isEqualTo: _dniController.text)
-          .where('date', isEqualTo: today)
-          .get();
-      
+      QuerySnapshot existingRecords =
+          await _firestore
+              .collection('attendance')
+              .where('dni', isEqualTo: _dniController.text)
+              .where('date', isEqualTo: today)
+              .get();
+
       DocumentReference attendanceRef;
-      
+
       if (existingRecords.docs.isNotEmpty && !isCheckIn) {
         // Update existing record for check-out
         attendanceRef = existingRecords.docs.first.reference;
-        
+
         // Get check-in time from existing document
-        String checkInTime = (existingRecords.docs.first.data() as Map<String, dynamic>)['checkIn']['time'];
-        
+        String checkInTime =
+            (existingRecords.docs.first.data()
+                as Map<String, dynamic>)['checkIn']['time'];
+
         // Calculate total hours
         DateTime checkInDateTime = DateFormat('HH:mm:ss').parse(checkInTime);
         DateTime checkOutTime = DateFormat('HH:mm:ss').parse(now);
-        
-        double totalHours = checkOutTime.difference(checkInDateTime).inMinutes / 60.0;
-        
+
+        double totalHours =
+            checkOutTime.difference(checkInDateTime).inMinutes / 60.0;
+
         await attendanceRef.update({
           'checkOut': {
             'time': now,
             'location': {
               'latitude': _targetLatitude,
-              'longitude': _targetLongitude
+              'longitude': _targetLongitude,
             },
-            'photoTaken': true,  // Indicador de que se tomó la foto
+            'photoTaken': true, // Indicador de que se tomó la foto
           },
           'totalHoursWorked': totalHours.toStringAsFixed(2),
-          'status': 'completed'
+          'status': 'completed',
         });
       } else {
         // Create new record for check-in
@@ -662,18 +658,19 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
             'time': now,
             'location': {
               'latitude': _targetLatitude,
-              'longitude': _targetLongitude
+              'longitude': _targetLongitude,
             },
-            'photoTaken': true,  // Indicador de que se tomó la foto
-          }
+            'photoTaken': true, // Indicador de que se tomó la foto
+          },
         });
       }
 
       setState(() {
         _hasCheckedIn = isCheckIn;
-        _lastAction = isCheckIn 
-          ? 'Entrada registrada a las $now' 
-          : 'Salida registrada a las $now';
+        _lastAction =
+            isCheckIn
+                ? 'Entrada registrada a las $now'
+                : 'Salida registrada a las $now';
       });
 
       // Show success and update UI
@@ -682,8 +679,6 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       _showErrorDialog('Error', 'No se pudo registrar la asistencia: $e');
     }
   }
-
-  
 
   void _showErrorDialog(String title, String message) {
     showDialog(
@@ -705,7 +700,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
       },
     );
   }
-  
+
   void _showSuccessDialog(bool isCheckIn) {
     showDialog(
       context: context,
@@ -743,9 +738,9 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  isCheckIn 
-                    ? 'Tu asistencia ha sido marcada correctamente.'
-                    : 'Tu salida ha sido registrada correctamente.',
+                  isCheckIn
+                      ? 'Tu asistencia ha sido marcada correctamente.'
+                      : 'Tu salida ha sido registrada correctamente.',
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
@@ -758,7 +753,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePage()
+                          builder: (context) => const HomePage(),
                         ),
                       );
                     },
@@ -777,14 +772,12 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
     );
   }
 
-  
-  
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final currentTime = DateFormat('HH:mm').format(now);
     final currentDate = DateFormat('EEEE, d MMMM', 'es').format(now);
-    
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -795,7 +788,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
             backgroundColor: Theme.of(context).colorScheme.primary,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Control de Asistencia', 
+                'Control de Asistencia',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -816,7 +809,7 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
               ),
             ),
           ),
-          
+
           // Main Content
           SliverToBoxAdapter(
             child: Padding(
@@ -835,8 +828,12 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
                         borderRadius: BorderRadius.circular(16),
                         gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                            Theme.of(context).colorScheme.secondary.withOpacity(0.8),
+                            Theme.of(
+                              context,
+                            ).colorScheme.primary.withOpacity(0.8),
+                            Theme.of(
+                              context,
+                            ).colorScheme.secondary.withOpacity(0.8),
                           ],
                         ),
                       ),
@@ -880,331 +877,405 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
 
                   // Simplified Location Status
                   Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: _isAtValidLocation 
-                                ? Colors.green[50] 
-                                : Colors.red[50],
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Icon(
-                                _isAtValidLocation ? Icons.check_circle : Icons.error,
-                                color: _isAtValidLocation ? Colors.green : Colors.red,
-                                size: 32,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _isAtValidLocation ? 'Ubicación Verificada' : 'Ubicación No Válida',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: _isAtValidLocation ? Colors.green[700] : Colors.red[700],
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _message,
-                                  style: TextStyle(
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.refresh, 
-                              color: _isAtValidLocation ? Colors.green : Colors.red,
-                            ),
-                            onPressed: _verifyLocation,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ).animate().fade(duration: 400.ms, delay: 100.ms).slideY(begin: 0.3, end: 0),
-
-                  const SizedBox(height: 16),
-                  
-                  // DNI Input Card
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Identificación',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          TextField(
-                            controller: _dniController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Ingrese su DNI',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              prefixIcon: const Icon(Icons.credit_card),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ).animate().fade(duration: 500.ms, delay: 200.ms).slideY(begin: 0.3, end: 0),
-
-                  const SizedBox(height: 16),
-                  
-                  // Photo Verification Card
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Foto de Verificación',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Toma una selfie para verificar tu identidad',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: _takePicture,
-                            child: Container(
-                              height: 250,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: _imageFile != null 
-                                    ? Theme.of(context).colorScheme.primary 
-                                    : Colors.grey[300]!,
-                                  width: 2,
-                                ),
-                                boxShadow: _imageFile != null ? [
-                                  BoxShadow(
-                                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                                    blurRadius: 10,
-                                    spreadRadius: 1,
-                                  )
-                                ] : null,
-                              ),
-                              child: _imageFile != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        Image.file(
-                                          _imageFile!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        // Verification Overlay
-                                        AnimatedBuilder(
-                                          animation: _checkInController,
-                                          builder: (context, child) {
-                                            return _checkInController.value > 0 
-                                              ? Positioned(
-                                                  bottom: 10,
-                                                  right: 10,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(8),
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context).colorScheme.primary,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: const Icon(
-                                                      Icons.check,
-                                                      color: Colors.white,
-                                                      size: 24,
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.camera_alt_rounded,
-                                        size: 64,
-                                        color: Colors.grey[400],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        "Toca para tomar una foto",
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: _takePicture,
-                              icon: const Icon(Icons.camera_alt_rounded),
-                              label: const Text('Tomar Selfie Ahora'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ).animate().fade(duration: 600.ms, delay: 300.ms).slideY(begin: 0.3, end: 0),
-
-                  const SizedBox(height: 16),
-                  
-                  // Attendance Registration Card
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Registro de Asistencia',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (_lastAction.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12, 
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey[300]!),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    _hasCheckedIn ? Icons.login : Icons.logout,
-                                    size: 20,
-                                    color: _hasCheckedIn ? Colors.green : Colors.blue,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      _lastAction,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                          const SizedBox(height: 20),
-                          Row(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
                             children: [
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: _isAtValidLocation && _imageFile != null && !_hasCheckedIn && _dniController.text.isNotEmpty
-                                    ? () => _markAttendance(true)
-                                    : null,
-                                  icon: const Icon(Icons.login_rounded),
-                                  label: const Column(
-                                    children: [
-                                      Text('Marcar'),
-                                      Text('Entrada'),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF10B981),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    disabledBackgroundColor: Colors.grey[300],
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color:
+                                      _isAtValidLocation
+                                          ? Colors.green[50]
+                                          : Colors.red[50],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    _isAtValidLocation
+                                        ? Icons.check_circle
+                                        : Icons.error,
+                                    color:
+                                        _isAtValidLocation
+                                            ? Colors.green
+                                            : Colors.red,
+                                    size: 32,
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: _isAtValidLocation && _imageFile != null && _hasCheckedIn && _dniController.text.isNotEmpty
-                                    ? () => _markAttendance(false)
-                                    : null,
-                                  icon: const Icon(Icons.logout_rounded),
-                                  label: const Column(
-                                    children: [
-                                      Text('Marcar'),
-                                      Text('Salida'),
-                                    ],
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _isAtValidLocation
+                                          ? 'Ubicación Verificada'
+                                          : 'Ubicación No Válida',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            _isAtValidLocation
+                                                ? Colors.green[700]
+                                                : Colors.red[700],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _message,
+                                      style: TextStyle(color: Colors.grey[700]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.refresh,
+                                  color:
+                                      _isAtValidLocation
+                                          ? Colors.green
+                                          : Colors.red,
+                                ),
+                                onPressed: _verifyLocation,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 400.ms, delay: 100.ms)
+                      .slideY(begin: 0.3, end: 0),
+
+                  const SizedBox(height: 16),
+
+                  // DNI Input Card
+                  Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Identificación',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              TextField(
+                                controller: _dniController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Ingrese su DNI',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
+                                  prefixIcon: const Icon(Icons.credit_card),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 500.ms, delay: 200.ms)
+                      .slideY(begin: 0.3, end: 0),
+
+                  const SizedBox(height: 16),
+
+                  // Photo Verification Card
+                  Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Foto de Verificación',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Toma una selfie para verificar tu identidad',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                              const SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: _takePicture,
+                                child: Container(
+                                  height: 250,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color:
+                                          _imageFile != null
+                                              ? Theme.of(
+                                                context,
+                                              ).colorScheme.primary
+                                              : Colors.grey[300]!,
+                                      width: 2,
+                                    ),
+                                    boxShadow:
+                                        _imageFile != null
+                                            ? [
+                                              BoxShadow(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .withOpacity(0.2),
+                                                blurRadius: 10,
+                                                spreadRadius: 1,
+                                              ),
+                                            ]
+                                            : null,
+                                  ),
+                                  child:
+                                      _imageFile != null
+                                          ? ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                Image.file(
+                                                  _imageFile!,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                // Verification Overlay
+                                                AnimatedBuilder(
+                                                  animation: _checkInController,
+                                                  builder: (context, child) {
+                                                    return _checkInController
+                                                                .value >
+                                                            0
+                                                        ? Positioned(
+                                                          bottom: 10,
+                                                          right: 10,
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets.all(
+                                                                  8,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                                  Theme.of(
+                                                                        context,
+                                                                      )
+                                                                      .colorScheme
+                                                                      .primary,
+                                                              shape:
+                                                                  BoxShape
+                                                                      .circle,
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.check,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 24,
+                                                            ),
+                                                          ),
+                                                        )
+                                                        : const SizedBox();
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                          : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.camera_alt_rounded,
+                                                size: 64,
+                                                color: Colors.grey[400],
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                "Toca para tomar una foto",
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: _takePicture,
+                                  icon: const Icon(Icons.camera_alt_rounded),
+                                  label: const Text('Tomar Selfie Ahora'),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF3B82F6),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    disabledBackgroundColor: Colors.grey[300],
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ).animate().fade(duration: 700.ms, delay: 400.ms).slideY(begin: 0.3, end: 0),
-                  
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 600.ms, delay: 300.ms)
+                      .slideY(begin: 0.3, end: 0),
+
+                  const SizedBox(height: 16),
+
+                  // Attendance Registration Card
+                  Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Registro de Asistencia',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (_lastAction.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.grey[300]!,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        _hasCheckedIn
+                                            ? Icons.login
+                                            : Icons.logout,
+                                        size: 20,
+                                        color:
+                                            _hasCheckedIn
+                                                ? Colors.green
+                                                : Colors.blue,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          _lastAction,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed:
+                                          _isAtValidLocation &&
+                                                  _imageFile != null &&
+                                                  !_hasCheckedIn &&
+                                                  _dniController.text.isNotEmpty
+                                              ? () => _markAttendance(true)
+                                              : null,
+                                      icon: const Icon(Icons.login_rounded),
+                                      label: const Column(
+                                        children: [
+                                          Text('Marcar'),
+                                          Text('Entrada'),
+                                        ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF10B981,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        disabledBackgroundColor:
+                                            Colors.grey[300],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed:
+                                          _isAtValidLocation &&
+                                                  _imageFile != null &&
+                                                  _hasCheckedIn &&
+                                                  _dniController.text.isNotEmpty
+                                              ? () => _markAttendance(false)
+                                              : null,
+                                      icon: const Icon(Icons.logout_rounded),
+                                      label: const Column(
+                                        children: [
+                                          Text('Marcar'),
+                                          Text('Salida'),
+                                        ],
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color(
+                                          0xFF3B82F6,
+                                        ),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 16,
+                                        ),
+                                        disabledBackgroundColor:
+                                            Colors.grey[300],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                      .animate()
+                      .fade(duration: 700.ms, delay: 400.ms)
+                      .slideY(begin: 0.3, end: 0),
+
                   const SizedBox(height: 24),
                 ],
               ),
@@ -1213,27 +1284,28 @@ class _AttendancePageState extends State<AttendancePage> with TickerProviderStat
         ],
       ),
       // Loading Indicator
-      floatingActionButton: _isLoading
-        ? Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
+      floatingActionButton:
+          _isLoading
+              ? Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          )
-        : null,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              )
+              : null,
     );
   }
 }
