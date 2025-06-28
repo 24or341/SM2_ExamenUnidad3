@@ -35,6 +35,10 @@ void main() {
         heading: 0,
         speed: 0,
         speedAccuracy: 0,
+        altitudeAccuracy: 1,
+        headingAccuracy: 1,
+        floor: 0,
+        isMocked: false,
       );
 
       final workLocation = WorkLocationModel(
@@ -58,6 +62,10 @@ void main() {
         heading: 0,
         speed: 0,
         speedAccuracy: 0,
+        altitudeAccuracy: 1,
+        headingAccuracy: 1,
+        floor: 0,
+        isMocked: false,
       );
 
       final workLocation = WorkLocationModel(
