@@ -37,6 +37,13 @@ class PantallaHistorial extends StatelessWidget {
             itemCount: registros.length,
             itemBuilder: (context, index) {
               final registro = registros[index];
+              final horaEntrada = registro.horaEntrada;
+              final horaSalida = registro.horaSalida;
+
+              if (horaEntrada == null) {
+                return const SizedBox.shrink(); // o muestra un texto alternativo
+              }
+
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(
@@ -45,12 +52,12 @@ class PantallaHistorial extends StatelessWidget {
                     color: Colors.indigo,
                   ),
                   title: Text(
-                    'Fecha: ${formatoFecha.format(registro.horaEntrada)}',
+                    'Fecha: ${formatoFecha.format(horaEntrada)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    'Entrada: ${formatoHora.format(registro.horaEntrada)}'
-                    '${registro.horaSalida != null ? ' - Salida: ${formatoHora.format(registro.horaSalida!)}' : ' - (Aún trabajando)'}',
+                    'Entrada: ${formatoHora.format(horaEntrada)}'
+                    '${horaSalida != null ? ' - Salida: ${formatoHora.format(horaSalida)}' : ' - (Aún trabajando)'}',
                   ),
                 ),
               );

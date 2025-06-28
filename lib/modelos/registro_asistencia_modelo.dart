@@ -1,5 +1,6 @@
 class RegistroAsistenciaModelo {
-  DateTime get horaEntrada => null;
+  DateTime? horaEntrada;
+  DateTime? horaSalida;
 
-  get horaSalida => null;
+  RegistroAsistenciaModelo({this.horaEntrada, this.horaSalida});
 }
