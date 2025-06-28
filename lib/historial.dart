@@ -10,7 +10,8 @@ class PantallaHistorial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final usuario = Provider.of<ProveedorSesion>(context, listen: false).usuarioActual;
+    final usuario =
+        Provider.of<ProveedorSesion>(context, listen: false).usuarioActual;
     final servicioAsistencia = ServicioAsistencia();
 
     return Scaffold(
@@ -39,14 +40,17 @@ class PantallaHistorial extends StatelessWidget {
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ListTile(
-                  leading: const Icon(Icons.calendar_today, color: Colors.indigo),
+                  leading: const Icon(
+                    Icons.calendar_today,
+                    color: Colors.indigo,
+                  ),
                   title: Text(
                     'Fecha: ${formatoFecha.format(registro.horaEntrada)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
                     'Entrada: ${formatoHora.format(registro.horaEntrada)}'
-                    '${registro.horaSalida != null ? ' - Salida: ${formatoHora.format(registro.horaSalida!)}' : ' - (Aún trabajando)'}'
+                    '${registro.horaSalida != null ? ' - Salida: ${formatoHora.format(registro.horaSalida!)}' : ' - (Aún trabajando)'}',
                   ),
                 ),
               );

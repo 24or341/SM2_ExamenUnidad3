@@ -1,8 +1,7 @@
 import 'package:geolocator/geolocator.dart';
-import '../models/work_location_model.dart';
+import '../modelos/work_location_model.dart';
 
 class LocationService {
-  
   // Obtiene la posición actual del dispositivo
   Future<Position> getCurrentPosition() async {
     bool serviceEnabled;
@@ -22,14 +21,19 @@ class LocationService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error('Los permisos de ubicación están permanentemente denegados, no podemos solicitar permisos.');
+      return Future.error(
+        'Los permisos de ubicación están permanentemente denegados, no podemos solicitar permisos.',
+      );
     }
 
     return await Geolocator.getCurrentPosition();
   }
 
   // Verifica si una posición está dentro de la geocerca de un lugar de trabajo
-  bool isWithinGeofence(Position currentPosition, WorkLocationModel workLocation) {
+  bool isWithinGeofence(
+    Position currentPosition,
+    WorkLocationModel workLocation,
+  ) {
     double distance = Geolocator.distanceBetween(
       currentPosition.latitude,
       currentPosition.longitude,
@@ -37,8 +41,10 @@ class LocationService {
       workLocation.longitude,
     );
 
-    print("Distancia al punto de trabajo: ${distance.toStringAsFixed(2)} metros.");
-    
+    print(
+      "Distancia al punto de trabajo: ${distance.toStringAsFixed(2)} metros.",
+    );
+
     return distance <= workLocation.radiusInMeters;
   }
 }
